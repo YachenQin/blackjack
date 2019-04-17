@@ -11,5 +11,7 @@ You have 50 dollars at the beginning and you are going to play together with oth
 Please enjoy the game!
 
 ## Demo Video
-[![Blackjack Demo]](https://youtu.be/X6mj3nnq7gk)
+[Blackjack Demo](https://youtu.be/X6mj3nnq7gk)
 
+## More instruction
+[Instruction](https://github.com/YachenQin/blackjack/blob/master/blackjackdocument.pdf)
