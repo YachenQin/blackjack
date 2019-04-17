@@ -14,6 +14,14 @@ import time
 class Game:
     def __init__(self,players):
         
+        '''
+        The playerlist contains all players in the game. eg.[player1,palyer2...]
+        playerpoints contains all players points in the game. eg.[10,2.....]
+        playerAnums contains how many a each player has. eg.[0,0,1,...] 
+        playeractions conatins the action order of players.
+        rewards is the money all player(include dealer) has.
+        moneybet contains the money each player bet in a round. eg.[10,5,20....]
+        '''
         self.playerlist = []
         
         for player in enumerate(players):
@@ -26,18 +34,19 @@ class Game:
         self.playerAnums = []
         self.actions = [0,1,2,3,4,5,6]
         
-        self.table = deck()
-        self.table.shuffle()
+        self.table = deck() #the cards use for this game
+        self.table.shuffle() #shuffle the card
         
         
-        self.bust = 0
-        #self.max_num = 0
-        #self.winner = []
-        
+        self.bust = 0 #number of bust in one game round 
+
         self.rewards = [50,50,50,50,50,50,50]
         self.moneybet = [0,0,0,0,0,0,0,0]
     
     def play(self):
+        '''
+        the process of the whole game
+        '''
         while(self.table.ifenough()):
             self.reset()
             self.run_one_time()
@@ -47,6 +56,10 @@ class Game:
         print(self.rewards)    
     
     def reset(self):
+        '''
+        clear the playerpoints and playerAnums
+        reset the cards in player's hand and assign them new cards for a next round
+        '''
         print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
         print("round start")
         self.playerpoints = []
@@ -73,22 +86,30 @@ class Game:
         
         
     def run_one_time(self,):
+        '''
+        The function define each round of the game.
+        Determin who win in this round and give winner money.
+        '''
         for action in self.actions:
             
-            #dealers turn
+            #dealers turn, the last one act during play
             if(action == 6):
+                
+                #if points in dealer's hand less than 17, it must take next card
                 while(self.dealerpoints < 17):
                     self.dealer.getcard(self.table)
                     self.dealerpoints = self.dealer.getpoints()[0]
                 
                 
-                
+                #if dealer bust, everyone not bust win the money
                 if(self.dealerpoints > 21):
                     self.bust += 1
                     print("dealer bust!")
                     for i in range(6):
                         self.rewards[i] += self.moneybet[i]
                         self.rewards[action] -= self.moneybet[i]
+                
+                #if dealer not bust, the larger one compare with dealer win the money
                 else:
                     for points in enumerate(self.playerpoints):
                         if(points[1] > self.dealerpoints and points[1] <=21):
@@ -101,6 +122,7 @@ class Game:
             #human turn
             elif(self.playerlist[action].type == 1):
                 self.humanrun(action)
+            
             #AI turn
             else:
                 self.AI_run(action)
@@ -118,6 +140,11 @@ class Game:
         time.sleep(10)
         
     def humanrun(self,action):
+        '''
+        input: the order number of action(0-5)
+        let the player use command to decide if hit or not(y-hit, other-stand)
+        
+        '''
         print("===================YOUR TURN================================")
         print("now the points of all after all deals" )
         print(self.playerpoints)
@@ -155,6 +182,11 @@ class Game:
     
     
     def AI_run(self,action):
+        '''
+        input: the order number of action(0-5)
+        let the AI use rand_pick function decide if hit or not(1-hit, 0-stand)
+        '''
+        
         bet = int(self.rewards[action]/3)
         if(bet==0):
             bet = 1;
@@ -176,6 +208,14 @@ class Game:
         
       
     def rand_pick(self,seq,probabilities):
+        '''
+        given an array and probability, return a number in array gnerate with probability
+        input:
+            eg.([0,1,2],[0.1,0.4,0.5])
+        output:
+            random number in [0,1,2] with different probability
+            eg.2
+        '''
         x = random.uniform(0 ,1)
         cumprob = 0.0
         for item , item_pro in zip(seq , probabilities):
